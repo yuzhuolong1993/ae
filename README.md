@@ -18,25 +18,25 @@
 
 ## 3. How to run<br>
 - Configure the parameters based on your environment
-  > config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
-  > client.c: <br>
+  - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
+  - client.c: <br>
 - Configure the switch
-  > Setup p4 running environment<br>
-  > Copy the files to the switch: python console.py init_sync_switch<br>
-  > Compile the netlock: python console.py compile_switch<br>
+  - Setup p4 running environment<br>
+  - Copy the files to the switch: python console.py init_sync_switch<br>
+  - Compile the netlock: python console.py compile_switch<br>
 - Configure the servers
-  > Setup dpdk environment<br>
-  > Copy the files to the server: python console.py init_sync_server<br>
-  > Compile the clients and lock servers: python console.py compile_host<br>
+  - Setup dpdk environment<br>
+  - Copy the files to the server: python console.py init_sync_server<br>
+  - Compile the clients and lock servers: python console.py compile_host<br>
 - After both the switch and the servers are correctly configured, you can replay the results by running console.py.<br>
-  > Figure 8(a): python console.py micro_bm_s<br>
-  > Figure 8(b): python console.py micro_bm_x<br>
-  > Figure 8(c)(d): python console.py micro_bm_cont<br>
-  > Figure 9: python console.py micro_bm_only_server<br>
-  > Figure 10: python console.py run_tpcc<br>
-  > Figure 11: python console.py run_tpcc_ms<br>
-  > Figure 12: python console.py priority<br>
-  > Figure 13: python console.py mem_man<br>
-  > Figure 14(a): `python console.py think_time`<br>
-  > Figure 14(b): `python console.py mem_size`<br>
-  > Figure 15: `python console.py failover`
+  - Figure 8(a): `python console.py micro_bm_s`<br>
+  - Figure 8(b): `python console.py micro_bm_x`<br>
+  - Figure 8(c)(d): `python console.py micro_bm_cont`<br>
+  - Figure 9: `python console.py micro_bm_only_server`<br>
+  - Figure 10: `python console.py run_tpcc`<br>
+  - Figure 11: `python console.py run_tpcc_ms`<br>
+  - Figure 12: `python console.py priority`<br>
+  - Figure 13: `python console.py mem_man`<br>
+  - Figure 14(a): `python console.py think_time`<br>
+  - Figure 14(b): `python console.py mem_size`<br>
+  - Figure 15: `python console.py failover`
