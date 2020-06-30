@@ -9,7 +9,7 @@
 - Software
   - Tofino SDK on the switch
   - DPDK on the servers
-    - You can either refer to this page or use the tools.sh script in dpdk_code/
+    - You can either refer to the [official guige](https://doc.dpdk.org/guides/linux_gsg/quick_start.html) or use the tools.sh script in dpdk_code/
       ```shell
       cd dpdk_code
       ./tools.sh install_dpdk
