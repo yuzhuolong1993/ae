@@ -23,7 +23,9 @@
    - results/: We collect results from all the servers and store them here.<br>
    - logs/: We collect logs from all the servers and store them here.<br>
    - traces/: Some traces we use for the experiments.<br>
-     - TPCC trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/tpcc_traces.zip) 
+     - TPCC trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/tpcc_traces.zip)<br>
+     - Microbenchmark trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/microbenchmark.zip)<br>
+     - Move the zip to the corresponding folder and unzip.<br>
    - console.py: A script to help run different set of evaluations.<br>
    - config.py: Some parameters to configure.<br>
    - parser.py: A script to parse the raw results.<br>
