@@ -25,13 +25,13 @@ Here we show some major building blocks of NetLock and how they are the implemen
   ```
 - **Switch Memory Layout**<br>
   We store the requests in a large circular queue and keep extra registers for the heads/tails/boundaries, so that each queue can have a flexible length and the switch memory can be efficiently utilized:
-  - `head_register`: stores the head pointers<br>
-  - `tail_register`: stores the tail pointers<br>
-  - `left_bound_register`: stores the left boundaries<br>
-  - `right_bound_register`: stores the right boundaries<br>
+  - `head_register`: stores the head pointers.<br>
+  - `tail_register`: stores the tail pointers.<br>
+  - `left_bound_register`: stores the left boundaries.<br>
+  - `right_bound_register`: stores the right boundaries.<br>
 - **Resubmission**<br>
   After a lock is released, the packet will be resubmitted to check on the requests waiting in the queue.
-  We store the information of dequeued request into the packet header 
+  We store the information of dequeued request into the packet header.
   ```p4
   action mark_to_resubmit_action() {
     modify_field(nlk_hdr.recirc_flag, 1);
@@ -42,7 +42,7 @@ Here we show some major building blocks of NetLock and how they are the implemen
     modify_field(meta.do_resubmit, 1);
   }
   ```
-  For each packet, we check the `nlk_hdr.recirc_flag`, `recirculate_hdr.dequeued_mode`, and `current_node_meta.mode` to decide whether we need to notify the clients and whether we need to resubmit this packet in the `release_lock` control block of `netlock.p4`.
+  For each packet, we check `nlk_hdr.recirc_flag`, `recirculate_hdr.dequeued_mode`, and `current_node_meta.mode` to decide whether we need to notify the clients and whether we need to resubmit this packet in the `release_lock` control block of `netlock.p4`.
    
 
 More details of the design are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/~zhuolong/papers/sigcomm20netlock.pdf)
@@ -54,10 +54,10 @@ Below we show how to configure the environment, how to run the system, and how t
   - client_code/: C code to run on clients.<br>
   - lock_server_code/: C code to run on lock servers.<br>
 - switch_code/<br>
-  - netchain/: netchain for comparison<br>
   - netlock/
     - p4src/: data-plane module (p4 code) for NetLock.<br>
     - controller_init/: control-plane module for NetLock.<br>
+  - netchain/: netchain for comparison<br>
 - results/: We collect results from all the servers and store them here.<br>
 - logs/: We collect logs from all the servers and store them here.<br>
 - traces/: Some traces we use for the experiments.<br>
@@ -82,7 +82,7 @@ Below we show how to configure the environment, how to run the system, and how t
         cd dpdk_code
         ./tools.sh install_dpdk
         ```
-  We provide easy-to-use scripts to run the experiments and to analyze the results. To use the scripts, we need: 
+  We provide easy-to-use scripts to run the experiments and to analyze the results. To use the scripts, you need: 
     - Python2.7, Paramiko at your endhost<br>
       ```pip install paramiko```
 
@@ -94,7 +94,7 @@ wget [The link is in the Content section]
 unzip tpcc_traces.zip -d tpcc_traces
 unzip microbenchmark.zip -d microbenchmark
 ```
-Then you can either run manually execute programs on the switch and the servers, or use the script (console.py) we provided (recommended).
+Then you can either manually execute programs on the switch and the servers, or use the script we provided (Recommended).
 - To use scripts (Recommended)<br>
   - Configure the parameters in files based on your environment.<br>
     - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
@@ -106,26 +106,27 @@ Then you can either run manually execute programs on the switch and the servers,
         - `python console.py init_sync_switch`<br>
       - Compile the NetLock.<br>
         - `python console.py compile_switch`<br>
+          This will take **a couple of minutes**. You can check `logs/p4_compile.log` in the switch to see if it's finished.
     - Setup the servers<br>
       - Setup DPDK environment (install dpdk, and set correct environment variables).<br>
       - Copy the files to the servers.<br>
         - `python console.py init_sync_server`<br>
       - Compile the clients and lock servers.<br>
         - `python console.py compile_host`<br>
-        - It will compile for both lock servers and clients.<br>
+          It will compile for both lock servers and clients.<br>
       - Bind NIC to DPDK.<br>
         - `python console.py setup_dpdk`<br>
-        - It will bind NIC to DPDK for both lock servers and clients.<br>
+          It will bind NIC to DPDK for both lock servers and clients.<br>
   - Run the programs<br>
     - Run NetLock on the switch<br>
       - `python console.py run_netlock`<br>
-      - It will bring up both the data-plane module and the control-plane module.
+        It will bring up both the data-plane module and the control-plane module. It may take **up to 150 seconds** (may vary between devices). You can check `logs/run_ptf_test.log` in the switch to see if it's finished (it will say `INIT Finished`).
     - Run lock servers<br>
       - `python console.py run_server`<br>
-      - It will run the lock servers with parameters defined in the script.
+        It will run the lock servers with parameters defined in the script.
     - Run clients<br>
       - `python console.py run_client`<br>
-      - It will run the clients with parameters defined in the script.<br>
+        It will run the clients with parameters defined in the script.<br>
   - Get the results and logs<br>
     The results are located at results/, and the log files are located at logs/<br>
     - To easily analyze the results, you can grab results from all the clients/servers to the local machine where you are running all the commands.
@@ -139,14 +140,14 @@ Then you can either run manually execute programs on the switch and the servers,
       - `python console.py kill_all`
   - Other commands<br>
     There are also some other commands you can use:
-    - `python console.py sync_switch`
-      - copy the local "switch code" to the switch
-    - `python console.py sync_host`
-      - copy the local "client code" and "lock server code" to the servers
-    - `python console.py sync_trace`
-      - copy the traces to the servers
-    - `python console.py clean_result`
-      - clean up the results/ directory<br>
+    - `python console.py sync_switch`<br>
+      copy the local "switch code" to the switch
+    - `python console.py sync_host`<br>
+      copy the local "client code" and "lock server code" to the servers
+    - `python console.py sync_trace`<br>
+      copy the traces to the servers
+    - `python console.py clean_result`<br>
+      clean up the results/ directory<br>
 - To manually run (Not recommended)<br>
   - Configure the ports information<br>
     - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
@@ -207,9 +208,9 @@ Then you can either run manually execute programs on the switch and the servers,
 - Setup the servers
   - Setup dpdk environment<br>
   - Copy the files to the server: `python console.py init_sync_server`<br>
-  - Compile the clients and lock servers: `python console.py compile_host`<br>
   - Bind NIC to DPDK: `python console.py setup_dpdk`<br>
-- After both the switch and the servers are correctly configured, you can replay the results by running console.py.<br>
+  - Compile the clients and lock servers: `python console.py compile_host`<br>
+- After both the switch and the servers are correctly configured, you can replay the results by running console.py. The following command will execute the switch program, lock server programs, and client programs automatically and grab the results to your endhost.<br>
   - Figure 8(a): `python console.py micro_bm_s`<br>
   - Figure 8(b): `python console.py micro_bm_x`<br>
   - Figure 8(c)(d): `python console.py micro_bm_cont`<br>
