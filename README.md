@@ -4,7 +4,48 @@ NetLock is a new centralized lock manager that co-designs servers and network sw
 
 ![10b](figures/architecture.jpg)
 
-More details are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/~zhuolong/papers/sigcomm20netlock.pdf)
+Here we show some major building blocks of NetLock and how they are the implemented at a high level.
+- Lock Request Handling
+  Due to the limitation of switch memory, NetLock only processes requests on popular locks in the switch, while the lock servers will help with the rest of the locks. We use `check_lock_exist_table` in `netlock.p4` to check whether the switch is responsible for the coming packet (request).
+  ```p4
+  table check_lock_exist_table {
+    reads {
+      nlk_hdr.lock: exact;
+    }
+    actions {
+      check_lock_exist_action;
+    }
+    size: NUM_LOCKS;
+  }
+
+  action check_lock_exist_action(index) {
+    modify_field(meta.lock_exist, 1);
+    modify_field(meta.lock_id, index);
+  }
+  ```
+- Switch Memory Layout
+  We store the requests in a large circular queue and keep extra registers for the heads/tails/boundaries, so that each queue can have a flexible length and the switch memory can be efficiently utilized:
+  - `head_register`: stores the head pointers<br>
+  - `tail_register`: stores the tail pointers<br>
+  - `left_bound_register`: stores the left boundaries<br>
+  - `right_bound_register`: stores the right boundaries<br>
+- Resubmission<br>
+  After a lock is released, a packet will be resubmitted to check on the requests waiting in the queue.
+  We store the information of dequeued request into the packet header 
+  ```p4
+  action mark_to_resubmit_action() {
+    modify_field(nlk_hdr.recirc_flag, 1);
+    add_header(recirculate_hdr);
+    modify_field(recirculate_hdr.cur_tail, meta.tail);
+    modify_field(recirculate_hdr.cur_head, meta.head);
+    modify_field(recirculate_hdr.dequeued_mode, current_node_meta.mode);
+    modify_field(meta.do_resubmit, 1);
+  }
+  ```
+  For each packet, we check the `nlk_hdr.recirc_flag`, `recirculate_hdr.dequeued_mode`, and `current_node_meta.mode` to decide whether we need to notify the clients and whether we need to resubmit this packet in the `release_lock` control block of `netlock.p4`.
+   
+
+More details of the design are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/~zhuolong/papers/sigcomm20netlock.pdf)
 
 Below we show how to configure the environment, how to run the system, and how to reproduce the results.
 
