@@ -96,9 +96,9 @@ unzip microbenchmark.zip -d microbenchmark
 ```
 Then you can either manually execute programs on the switch and the servers, or use the script we provided (Recommended).
 - To use scripts (Recommended)<br>
-  - Configure the parameters in files based on your environment.<br>
-    - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
-    - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
+  - Configure the parameters in the files based on your environment.<br>
+    - `config.py`: provide the information of your servers (username, passwd, hostname, dir)<br>
+    - `switch_code/netlock/controller_init/ports.json`: use the information (actual enabled ports) on your switch.
   - Environment setup<br>
     - Setup the switch<br>
       - Setup the necessary environment variables to point to the appropriate locations.<br>
@@ -150,7 +150,7 @@ Then you can either manually execute programs on the switch and the servers, or 
       clean up the results/ directory<br>
 - To manually run (Not recommended)<br>
   - Configure the ports information<br>
-    - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
+    - `switch_code/netlock/controller_init/ports.json`: use the information (actual enabled ports) on your switch.
   - Environment setup<br>
     - Setup the switch<br>
       - Setup the necessary environment variables to point to the appropriate locations.<br>
@@ -240,5 +240,5 @@ Then you can either manually execute programs on the switch and the servers, or 
     - For example, after running `python console.py run_tpcc`, you can run:
       - `python parser.py tput tpcc` will give you the transaction throughput. It will give the results we used for Figure 10(a) (Shown below).
       ![10b](figures/10a.jpg)
-
-     
+## 5. Contact<br>
+You can email us at `zhuolong at cs dot jhu dot edu` if you have any questions.
