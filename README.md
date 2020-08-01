@@ -5,7 +5,7 @@ NetLock is a new centralized lock manager that co-designs servers and network sw
 ![10b](figures/architecture.jpg)
 
 Here we show some major building blocks of NetLock and how they are the implemented at a high level.
-- Lock Request Handling
+- **Lock Request Handling**<br>
   Due to the limitation of switch memory, NetLock only processes requests on popular locks in the switch, while the lock servers will help with the rest of the locks. We use `check_lock_exist_table` in `netlock.p4` to check whether the switch is responsible for the coming packet (request).
   ```p4
   table check_lock_exist_table {
@@ -23,13 +23,13 @@ Here we show some major building blocks of NetLock and how they are the implemen
     modify_field(meta.lock_id, index);
   }
   ```
-- Switch Memory Layout
+- **Switch Memory Layout**<br>
   We store the requests in a large circular queue and keep extra registers for the heads/tails/boundaries, so that each queue can have a flexible length and the switch memory can be efficiently utilized:
   - `head_register`: stores the head pointers<br>
   - `tail_register`: stores the tail pointers<br>
   - `left_bound_register`: stores the left boundaries<br>
   - `right_bound_register`: stores the right boundaries<br>
-- Resubmission<br>
+- **Resubmission**<br>
   After a lock is released, a packet will be resubmitted to check on the requests waiting in the queue.
   We store the information of dequeued request into the packet header 
   ```p4
