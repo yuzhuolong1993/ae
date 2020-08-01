@@ -8,7 +8,27 @@ More details are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/
 
 Below we show how to configure the environment, how to run the system, and how to reproduce the results.
 
-## 1. Environment requirement<br>
+## 1. Content<br>
+- dpdk_code/<br>
+  - client_code/: C code to run on clients.<br>
+  - lock_server_code/: C code to run on lock servers.<br>
+- switch_code/<br>
+  - netchain/: netchain for comparison<br>
+  - netlock/
+    - p4src/: data-plane module (p4 code) for NetLock.<br>
+    - controller_init/: control-plane module for NetLock.<br>
+- results/: We collect results from all the servers and store them here.<br>
+- logs/: We collect logs from all the servers and store them here.<br>
+- traces/: Some traces we use for the experiments.<br>
+  - TPCC trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/tpcc_traces.zip)<br>
+  - Microbenchmark trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/microbenchmark.zip)<br>
+  - Move the zip to the corresponding folder and unzip.<br>
+- console.py: A script to help run different set of evaluations.<br>
+- config.py: Some parameters to configure.<br>
+- parser.py: A script to parse the raw results.<br>
+- README.md: This file.<br>
+
+## 2. Environment requirement<br>
 - Hardware
   - A Barefoot Tofino switch.<br>
   - Servers with a DPDK-compatible NIC (we used an Intel XL710 for 40GbE QSFP+) and multi-core CPU.<br>
@@ -24,20 +44,6 @@ Below we show how to configure the environment, how to run the system, and how t
   We provide easy-to-use scripts to run the experiments and to analyze the results. To use the scripts, we need: 
     - Python2.7, Paramiko at your endhost<br>
       ```pip install paramiko```
-
-## 2. Content<br>
-   - dpdk_code/: C code to run on lock servers and client.<br>
-   - switch_code/: p4 code to run on Programmable switch.<br>
-   - results/: We collect results from all the servers and store them here.<br>
-   - logs/: We collect logs from all the servers and store them here.<br>
-   - traces/: Some traces we use for the experiments.<br>
-     - TPCC trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/tpcc_traces.zip)<br>
-     - Microbenchmark trace link: [Click to download!](http://cs.jhu.edu/~zhuolong/resource/microbenchmark.zip)<br>
-     - Move the zip to the corresponding folder and unzip.<br>
-   - console.py: A script to help run different set of evaluations.<br>
-   - config.py: Some parameters to configure.<br>
-   - parser.py: A script to parse the raw results.<br>
-   - README.md: This file.<br>
 
 ## 3. How to run<br>
 First the traces should be downloaded to the traces/ directory.
@@ -177,18 +183,18 @@ Then you can either run manually execute programs on the switch and the servers,
     - `parser.py` can help process the result files to get the throughput/latency.
     - It can process different metrics by running `python parser.py [metric] [task_name]`:
       - metric:
-        - tput: lock throughput.
-        - txn_tput: transaction throughput.
-        - avg_latency/99_latency/99.9_latency: the average/99%/99.9% latency for locks.
-        - txn_avg_latency/txn_99_latency/txn_99.9_latency: the average/99%/99.9% latency for transactions.
+        - `tput`: lock throughput.
+        - `txn_tput`: transaction throughput.
+        - `avg_latency/99_latency/99.9_latency`: the average/99%/99.9% latency for locks.
+        - `txn_avg_latency/txn_99_latency/txn_99.9_latency`: the average/99%/99.9% latency for transactions.
       - task_name:
-        - micro_bm_s: microbenchmark - shared locks.
-        - micro_bm_x: microbenchmark - exclusive locks w/o contention.
-        - micro_bm_cont: microbenchmark - exclusive locks w/ contention.
-        - tpcc: TPC-C workload with 10v2 setting.
-        - tpcc_ms: TPC-C workload with 6v6 setting.
-        - mem_man: memory management experiment.
-        - mem_size: memory size experiment.
+        - `micro_bm_s`: microbenchmark - shared locks.
+        - `micro_bm_x`: microbenchmark - exclusive locks w/o contention.
+        - `micro_bm_cont`: microbenchmark - exclusive locks w/ contention.
+        - `tpcc`: TPC-C workload with 10v2 setting.
+        - `tpcc_ms`: TPC-C workload with 6v6 setting.
+        - `mem_man`: memory management experiment.
+        - `mem_size`: memory size experiment.
     - For example, after running `python console.py run_tpcc`, you can run:
       - `python parser.py tput tpcc` will give you the transaction throughput. It will give the results we used for Figure 10(a) (Shown below).
       ![10b](figures/10a.jpg)

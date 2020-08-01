@@ -1,4 +1,4 @@
-Current path: client_dpdk/
+Current path: dpdk_code/client_code/
 
 Compile:
 `make`
