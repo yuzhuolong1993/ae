@@ -30,7 +30,7 @@ Here we show some major building blocks of NetLock and how they are the implemen
   - `left_bound_register`: stores the left boundaries<br>
   - `right_bound_register`: stores the right boundaries<br>
 - **Resubmission**<br>
-  After a lock is released, a packet will be resubmitted to check on the requests waiting in the queue.
+  After a lock is released, the packet will be resubmitted to check on the requests waiting in the queue.
   We store the information of dequeued request into the packet header 
   ```p4
   action mark_to_resubmit_action() {
