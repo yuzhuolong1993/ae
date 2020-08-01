@@ -190,7 +190,7 @@ Then you can either run manually execute programs on the switch and the servers,
         - mem_man: memory management experiment.
         - mem_size: memory size experiment.
     - For example, after running `python console.py run_tpcc`, you can run:
-      - `python parser.py txn_tput tpcc` will give you the transaction throughput. It will give the results we used for Figure 10(b) (Shown below).
-      ![10b](figures/10b.jpg)
+      - `python parser.py tput tpcc` will give you the transaction throughput. It will give the results we used for Figure 10(a) (Shown below).
+      ![10b](figures/10a.jpg)
 
      
