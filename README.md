@@ -200,11 +200,13 @@ Then you can either manually execute programs on the switch and the servers, or 
   unzip microbenchmark.zip -d microbenchmark
   ```
 - Configure the parameters in the files based on your environment
-  - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
+  - `config.py`: provide the information of your servers (username, passwd, hostname, dir).<br>
+  - `switch_code/netlock/controller_init/ports.json`: use the information (actual enabled ports) on your switch.<br>
 - Setup the switch
-  - Setup p4 running environment<br>
+  - Setup the necessary environment variables to point to the appropriate locations.<br>
   - Copy the files to the switch: `python console.py init_sync_switch`<br>
   - Compile the netlock: `python console.py compile_switch`<br>
+    Again it will take **a couple of minutes**. You can check `logs/p4_compile.log` in the switch to see if it's finished.
 - Setup the servers
   - Setup dpdk environment<br>
   - Copy the files to the server: `python console.py init_sync_server`<br>
