@@ -1,8 +1,12 @@
 # NetLock: Fast, Centralized Lock Management Using Programmable Switches
 ## 0. Introduction<br>
-NetLock is a new centralized lock manager that co- designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. NetLock exploits the capability of emerging programmable switches to directly process lock requests in the switch data plane.
+NetLock is a new centralized lock manager that co-designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. NetLock exploits the capability of emerging programmable switches to directly process lock requests in the switch data plane.
+
+![10b](figures/architecture.jpg)
 
 More details are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/~zhuolong/papers/sigcomm20netlock.pdf)
+
+Below we show how to configure the environment, how to run the system, and how to reproduce the results.
 
 ## 1. Environment requirement<br>
 - Hardware
@@ -37,28 +41,14 @@ More details are available in our SIGCOMM'20 paper. [[Paper]](http://cs.jhu.edu/
 
 ## 3. How to run<br>
 First the traces should be downloaded to the traces/ directory.
-    ```shell
-    cd traces
-    wget [The link is in the Content section]
-    unzip tpcc_traces.zip -d tpcc_traces
-    unzip microbenchmark.zip -d microbenchmark
-    ```
+```shell
+cd traces
+wget [The link is in the Content section]
+unzip tpcc_traces.zip -d tpcc_traces
+unzip microbenchmark.zip -d microbenchmark
+```
 Then you can either run manually execute programs on the switch and the servers, or use the script (console.py) we provided (recommended).
-- To manually run<br>
-  - Configure the ports information<br>
-    - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
-  - Environment setup<br>
-    - xxxx <br>
-  - Run the programs<br>
-    - Run NetLock on the switch<br>
-      - xxxx <br>
-    - Run lock servers<br>
-      - xxxx <br>
-    - Run clients<br>
-      - xxxx <br>
-  - Results and logs
-    The results are located at results/, and the log files are located at logs/<br>
-- To use console.py<br>
+- To use scripts (Recommended)<br>
   - Configure the parameters in files based on your environment.<br>
     - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
     - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
@@ -110,8 +100,57 @@ Then you can either run manually execute programs on the switch and the servers,
       - copy the traces to the servers
     - `python console.py clean_result`
       - clean up the results/ directory<br>
+- To manually run (Not recommended)<br>
+  - Configure the ports information<br>
+    - switch_code/netlock/controller_init/ports.json: use the information (actual enabled ports) on your switch.
+  - Environment setup<br>
+    - Setup the switch<br>
+      - Setup the necessary environment variables to point to the appropriate locations.<br>
+      - Copy the files to the switch.<br>
+      - Compile the NetLock.<br>
+        ```shell
+        cd switch_code/netlock/p4src
+        python tool.py compile netlock.p4
+        ```
+    - Setup the servers<br>
+      - Setup DPDK environment (install dpdk, and set correct environment variables).<br>
+      - Copy the files to the servers.<br>
+      - Bind NIC to DPDK.<br>
+        ```shell
+        cd dpdk_code
+        ./tools.sh setup_dpdk
+        ```
+      - Compile the clients.<br>
+        ```shell
+        cd dpdk_code/client_code
+        make
+        ```
+      - Compile the lock servers.<br>
+        ```shell
+        cd dpdk_code/lock_server_code
+        make
+        ```
+  - Run the programs<br>
+    - Run NetLock on the switch<br>
+      ```shell
+      cd switch_code/netlock/p4src
+      python tool.py start_switch netlock 
+      python tool.py ptf_test ../controller_init netlock (Execute in another window)
+      ```
+    - Run lock servers<br>
+      - See [here](dpdk_code/README.md).<br>
+    - Run clients<br>
+      - See [here](dpdk_code/README.md).<br>
+  - Results and logs
+    The results are located at results/, and the log files are located at logs/<br>
 ## 4. How to reproduce the results<br>
-- Copy the traces xxxx<br>
+- Copy the traces.<br>
+  ```shell
+  cd traces
+  wget [The link is in the Content section]
+  unzip tpcc_traces.zip -d tpcc_traces
+  unzip microbenchmark.zip -d microbenchmark
+  ```
 - Configure the parameters in the files based on your environment
   - config.py: provide the information of your servers (username, passwd, hostname, dir)<br>
 - Setup the switch
@@ -135,3 +174,23 @@ Then you can either run manually execute programs on the switch and the servers,
 - Interprete the results.<br>
   - `console.py` will collect raw results from the servers and store them at `results/`.
   - `parser.py` can parse the results (tput, avg. latency, etc.)
+    - `parser.py` can help process the result files to get the throughput/latency.
+    - It can process different metrics by running `python parser.py [metric] [task_name]`:
+      - metric:
+        - tput: lock throughput.
+        - txn_tput: transaction throughput.
+        - avg_latency/99_latency/99.9_latency: the average/99%/99.9% latency for locks.
+        - txn_avg_latency/txn_99_latency/txn_99.9_latency: the average/99%/99.9% latency for transactions.
+      - task_name:
+        - micro_bm_s: microbenchmark - shared locks.
+        - micro_bm_x: microbenchmark - exclusive locks w/o contention.
+        - micro_bm_cont: microbenchmark - exclusive locks w/ contention.
+        - tpcc: TPC-C workload with 10v2 setting.
+        - tpcc_ms: TPC-C workload with 6v6 setting.
+        - mem_man: memory management experiment.
+        - mem_size: memory size experiment.
+    - For example, after running `python console.py run_tpcc`, you can run:
+      - `python parser.py txn_tput tpcc` will give you the transaction throughput. It will give the results we used for Figure 10(b) (Shown below).
+      ![10b](figures/10b.jpg)
+
+     
