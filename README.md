@@ -75,15 +75,15 @@ Below we show how to configure the environment, how to run the system, and how t
   - Servers with a DPDK-compatible NIC (we used an Intel XL710 for 40GbE QSFP+) and multi-core CPU.<br>
 - Software<br>
   The current version of NetLock is tested on:<br>
-    - Tofino SDK (version after 8.2.2) on the switch<br>
-    - DPDK (16.11.1) on the servers<br>
-      You can either refer to the [official guige](https://doc.dpdk.org/guides/linux_gsg/quick_start.html) or use the tools.sh script in dpdk_code/
+    - Tofino SDK (version after 8.2.2) on the switch.<br>
+    - DPDK (16.11.1) on the servers.<br>
+      You can either refer to the [official guige](https://doc.dpdk.org/guides/linux_gsg/quick_start.html) or use the tools.sh script in dpdk_code/.
         ```shell
         cd dpdk_code
         ./tools.sh install_dpdk
         ```
   We provide easy-to-use scripts to run the experiments and to analyze the results. To use the scripts, you need: 
-    - Python2.7, Paramiko at your endhost<br>
+    - Python2.7, Paramiko at your endhost.<br>
       ```pip install paramiko```
 
 ## 3. How to run<br>
@@ -96,8 +96,8 @@ unzip microbenchmark.zip -d microbenchmark
 ```
 Then you can either manually execute programs on the switch and the servers, or use the script we provided (Recommended).
 - To use scripts (Recommended)<br>
-  - Configure the parameters in the files based on your environment.<br>
-    - `config.py`: provide the information of your servers (username, passwd, hostname, dir)<br>
+  - Configure the parameters in the files based on your environment<br>
+    - `config.py`: provide the information of your servers (username, passwd, hostname, dir).<br>
     - `switch_code/netlock/controller_init/ports.json`: use the information (actual enabled ports) on your switch.
   - Environment setup<br>
     - Setup the switch<br>
@@ -120,7 +120,7 @@ Then you can either manually execute programs on the switch and the servers, or 
   - Run the programs<br>
     - Run NetLock on the switch<br>
       - `python console.py run_netlock`<br>
-        It will bring up both the data-plane module and the control-plane module. It may take **up to 150 seconds** (may vary between devices). You can check `logs/run_ptf_test.log` in the switch to see if it's finished (it will say `INIT Finished`).
+        It will bring up both the data-plane module and the control-plane module. It may take **up to 150 seconds** (may vary between devices). You can check `logs/run_ptf_test.log` in the switch to see if it's finished (it will say `"INIT Finished"`).
     - Run lock servers<br>
       - `python console.py run_server`<br>
         It will run the lock servers with parameters defined in the script.
@@ -179,7 +179,7 @@ Then you can either manually execute programs on the switch and the servers, or 
         make
         ```
   - Run the programs<br>
-    - Run NetLock on the switch<br>
+    - Run NetLock on the switch.<br>
       ```shell
       cd switch_code/netlock/p4src
       python tool.py start_switch netlock 
